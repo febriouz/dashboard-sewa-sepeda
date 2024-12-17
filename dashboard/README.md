@@ -7,13 +7,13 @@ Dashboard ini adalah aplikasi interaktif berbasis **Streamlit** yang menganalisi
 ---
 
 ## **Fitur Utama**
-- **Ringkasan Data**:
+- **Ringkasan Data**:  
   Menampilkan contoh data penyewaan sepeda.
-- **Analisis Berdasarkan Cuaca**:
+- **Analisis Berdasarkan Cuaca**:  
   Visualisasi rata-rata penyewaan berdasarkan kondisi cuaca.
-- **Analisis Hari Kerja vs Akhir Pekan**:
+- **Analisis Hari Kerja vs Akhir Pekan**:  
   Membandingkan rata-rata penyewaan sepeda antara hari kerja dan akhir pekan.
-  
+
 ---
 
 ## **Dataset**
@@ -31,11 +31,11 @@ Dashboard ini menggunakan dua dataset yang telah dibersihkan:
 - **holiday**: Hari libur (1: ya, 0: tidak).
 - **weekday**: Hari dalam minggu.
 - **workingday**: Hari kerja (1: ya, 0: tidak).
-- **weathersit**: Kondisi cuaca:
-  - 1: Cerah,
-  - 2: Mendung/Hujan Ringan,
-  - 3: Hujan Lebat,
-  - 4: Ekstrem.
+- **weathersit**: Kondisi cuaca:  
+   - 1: Cerah,  
+   - 2: Mendung/Hujan Ringan,  
+   - 3: Hujan Lebat,  
+   - 4: Ekstrem.  
 - **temp**: Suhu normalisasi.
 - **atemp**: Suhu terasa (normalisasi).
 - **hum**: Kelembapan (normalisasi).
@@ -50,12 +50,12 @@ Dashboard ini menggunakan dua dataset yang telah dibersihkan:
 ### **1. Menjalankan Secara Lokal**
 1. **Clone Repository**:
    ```bash
-   git clone https://github.com/username/dashboard-sewa-sepeda.git
+   git clone https://github.com/febriouz/dashboard-sewa-sepeda.git
    cd dashboard-sewa-sepeda/dashboard
    ```
 
-2. **Install Dependencies**:
-   - Pastikan Python 3.8+ sudah terinstall.
+2. **Install Dependencies**:  
+   - Pastikan Python 3.8+ sudah terinstal.
    - Install library yang dibutuhkan menggunakan file `requirements.txt`:
      ```bash
      pip install -r requirements.txt
@@ -67,7 +67,7 @@ Dashboard ini menggunakan dua dataset yang telah dibersihkan:
    ```
 
 4. **Akses Dashboard**:
-   - Aplikasi akan berjalan di browser melalui URL:
+   - Aplikasi akan berjalan di browser melalui URL:  
      ```
      http://localhost:8501
      ```
@@ -75,7 +75,7 @@ Dashboard ini menggunakan dua dataset yang telah dibersihkan:
 ---
 
 ### **2. Akses Langsung di Streamlit Cloud**
-Aplikasi ini sudah tersedia secara online di **Streamlit Cloud**. Anda bisa langsung mengakses dashboard melalui link berikut:
+Aplikasi ini tersedia secara online di **Streamlit Cloud**. Anda bisa langsung mengakses dashboard melalui link berikut:
 
 🔗 **[Dashboard Penyewaan Sepeda](https://dashboard-sewa-sepeda-tjteaxcctfdajat64hwhmr.streamlit.app/)**
 
@@ -106,4 +106,5 @@ Pastikan library ini diinstal melalui file `requirements.txt`.
 
 ## **Lisensi**
 Proyek ini berlisensi **MIT**. Anda bebas menggunakannya, namun tetap mencantumkan kredit kepada penulis.
+
 
