@@ -84,7 +84,7 @@ Dashboard ini adalah aplikasi interaktif berbasis **Streamlit** yang digunakan u
 ### **2. Akses Langsung di Streamlit Cloud**
 Aplikasi ini juga tersedia secara online di **Streamlit Cloud**. Klik tautan di bawah untuk mengakses dashboard:
 
-🔗 **[Dashboard Penyewaan Sepeda](https://dashboard-sewa-sepeda-tjteaxcctfdajat64hwhmr.streamlit.app/)**
+🔗 **[Dashboard Penyewaan Sepeda](https://dashboard-sewa-sepeda-bqrtmwyhbcbzwjmcrkbphl.streamlit.app/)**
 
 ---
 
