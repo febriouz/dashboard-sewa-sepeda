@@ -7,11 +7,11 @@ import gzip
 
 @st.cache_data
 def load_data():
-    # Path absolut dinamis untuk file terkompresi
+    # Path absolut dinamis untuk file CSV terkompresi
     current_dir = os.path.abspath(os.path.dirname(__file__))
     hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
 
-    # Debugging Path
+    # Debugging path
     st.write(f"Path saat ini: {current_dir}")
     st.write(f"Path file yang dicari: {hour_file_path}")
 
@@ -21,24 +21,19 @@ def load_data():
         st.write("Isi folder root:", os.listdir(current_dir))
         raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
 
-    # Membaca data CSV terkompresi
-    try:
-        with gzip.open(hour_file_path, mode='rt') as f:
-            hour_df = pd.read_csv(f)
-            hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
-            hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
+    # Membaca data
+    with gzip.open(hour_file_path, mode='rt') as f:
+        hour_df = pd.read_csv(f)
+        hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
+        hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
 
-            # Menambahkan label cuaca dan musim
-            weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
-            hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
-            season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
-            hour_df['season'] = hour_df['season'].map(season_labels)
-            
-            return hour_df
+        # Menambahkan label cuaca dan musim
+        weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
+        hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
+        season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
+        hour_df['season'] = hour_df['season'].map(season_labels)
 
-    except Exception as e:
-        st.error(f"Gagal memuat file: {e}")
-        return pd.DataFrame()
+    return hour_df
 
 # Load data
 try:
@@ -114,6 +109,7 @@ if not data.empty:
     # Halaman Analisis Musim
     elif page == "Analisis Musim":
         st.title("Pengaruh Musim terhadap Penyewaan Sepeda")
+
         selected_season_filter = st.multiselect(
             "Pilih Musim untuk Analisis",
             options=filtered_data['season'].unique(),
