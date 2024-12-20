@@ -6,7 +6,8 @@ import seaborn as sns
 # Load Data
 @st.cache_data
 def load_data():
-    hour_df = pd.read_csv('dashboard/cleaned_hour.csv')  # Menyesuaikan path ke folder dashboard
+    # Pastikan dataset berada di folder yang sama dengan file Python ini
+    hour_df = pd.read_csv('dashboard/cleaned_hour.csv')
     hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
     hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
     weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
@@ -18,8 +19,33 @@ def load_data():
 # Load data
 data = load_data()
 
-# Sidebar untuk Navigasi
+# Sidebar untuk Navigasi dan Filter
 st.sidebar.title("Navigasi Dashboard")
+
+# Filter Berdasarkan Tanggal
+min_date = data['dteday'].min().date()
+max_date = data['dteday'].max().date()
+start_date, end_date = st.sidebar.date_input(
+    label="Pilih Rentang Tanggal",
+    min_value=min_date,
+    max_value=max_date,
+    value=[min_date, max_date]
+)
+
+# Filter Berdasarkan Musim
+selected_season = st.sidebar.multiselect(
+    "Pilih Musim",
+    options=data['season'].unique(),
+    default=data['season'].unique()
+)
+
+# Menerapkan Filter
+filtered_data = data[
+    (data['dteday'] >= pd.Timestamp(start_date)) &
+    (data['dteday'] <= pd.Timestamp(end_date)) &
+    (data['season'].isin(selected_season))
+]
+
 page = st.sidebar.radio("Pilih Halaman:", ["Beranda", "Analisis Cuaca", "Analisis Hari Kerja", "Analisis Musim", "Kesimpulan"])
 
 # Halaman Beranda
@@ -27,15 +53,15 @@ if page == "Beranda":
     st.title("Dashboard Penyewaan Sepeda 🚴")
     st.write("**Dashboard ini menampilkan hasil analisis faktor cuaca, musim, dan tipe hari pada penyewaan sepeda.**")
 
-    st.subheader("Contoh Data:")
-    st.dataframe(data.head(10))
+    st.subheader("Contoh Data yang Difilter:")
+    st.dataframe(filtered_data.head(10))
 
 # Halaman Analisis Cuaca
 elif page == "Analisis Cuaca":
     st.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
 
     # Menghitung rata-rata penyewaan berdasarkan cuaca
-    avg_weather = data.groupby('weathersit')['cnt'].mean().reset_index()
+    avg_weather = filtered_data.groupby('weathersit')['cnt'].mean().reset_index()
     avg_weather.columns = ['Kondisi Cuaca', 'Rata-rata Penyewaan']
 
     st.subheader("Rata-rata Penyewaan Berdasarkan Kondisi Cuaca")
@@ -51,7 +77,7 @@ elif page == "Analisis Hari Kerja":
     st.title("Perbandingan Penyewaan pada Hari Kerja dan Akhir Pekan")
 
     # Menghitung rata-rata penyewaan berdasarkan tipe hari
-    avg_day_type = data.groupby('day_type')['cnt'].mean().reset_index()
+    avg_day_type = filtered_data.groupby('day_type')['cnt'].mean().reset_index()
     avg_day_type.columns = ['Tipe Hari', 'Rata-rata Penyewaan']
 
     st.subheader("Rata-rata Penyewaan Berdasarkan Tipe Hari")
@@ -67,7 +93,7 @@ elif page == "Analisis Musim":
     st.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 
     # Menghitung rata-rata penyewaan berdasarkan musim
-    avg_season = data.groupby('season')['cnt'].mean().reset_index()
+    avg_season = filtered_data.groupby('season')['cnt'].mean().reset_index()
     avg_season.columns = ['Musim', 'Rata-rata Penyewaan']
 
     st.subheader("Rata-rata Penyewaan Berdasarkan Musim")
