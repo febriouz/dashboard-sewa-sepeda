@@ -128,10 +128,40 @@ if not data.empty:
         ax.set_ylabel("Rata-rata Penyewaan Sepeda")
         st.pyplot(fig)
 
-    # Halaman Kesimpulan
-    elif page == "Kesimpulan":
-        st.title("Kesimpulan Analisis Penyewaan Sepeda")
-        st.write("- Penyewaan sepeda tertinggi terjadi pada **cuaca cerah**.")
-        st.write("- Penyewaan sepeda menurun drastis pada **cuaca ekstrem**.")
-        st.write("- Penyewaan pada **hari kerja** lebih tinggi dibandingkan akhir pekan.")
-        st.write("- Penyewaan tertinggi terjadi pada **Musim Panas**.")
+   # Halaman Kesimpulan
+elif page == "Kesimpulan":
+    st.title("Kesimpulan Analisis Penyewaan Sepeda")
+
+    # Menghitung rata-rata penyewaan berdasarkan cuaca
+    avg_weather = data.groupby('weathersit')['cnt'].mean().reset_index()
+    cuaca_tertinggi = avg_weather.loc[avg_weather['cnt'].idxmax()]
+    cuaca_terendah = avg_weather.loc[avg_weather['cnt'].idxmin()]
+
+    # Menghitung rata-rata penyewaan berdasarkan tipe hari
+    avg_day_type = data.groupby('day_type')['cnt'].mean().reset_index()
+    hari_tertinggi = avg_day_type.loc[avg_day_type['cnt'].idxmax()]
+    hari_terendah = avg_day_type.loc[avg_day_type['cnt'].idxmin()]
+
+    # Menghitung rata-rata penyewaan berdasarkan musim
+    avg_season = data.groupby('season')['cnt'].mean().reset_index()
+    musim_tertinggi = avg_season.loc[avg_season['cnt'].idxmax()]
+    musim_terendah = avg_season.loc[avg_season['cnt'].idxmin()]
+
+    # Menampilkan Kesimpulan
+    st.subheader("Kesimpulan Analisis Cuaca:")
+    st.write(f"- Penyewaan sepeda tertinggi terjadi pada **cuaca {cuaca_tertinggi['weathersit']}** "
+             f"dengan rata-rata **{cuaca_tertinggi['cnt']:.2f} penyewaan**.")
+    st.write(f"- Penyewaan sepeda terendah terjadi pada **cuaca {cuaca_terendah['weathersit']}** "
+             f"dengan rata-rata **{cuaca_terendah['cnt']:.2f} penyewaan**.")
+
+    st.subheader("Kesimpulan Analisis Hari Kerja:")
+    st.write(f"- Penyewaan tertinggi terjadi pada **{hari_tertinggi['day_type']}** "
+             f"dengan rata-rata **{hari_tertinggi['cnt']:.2f} penyewaan**.")
+    st.write(f"- Penyewaan terendah terjadi pada **{hari_terendah['day_type']}** "
+             f"dengan rata-rata **{hari_terendah['cnt']:.2f} penyewaan**.")
+
+    st.subheader("Kesimpulan Analisis Musim:")
+    st.write(f"- Penyewaan tertinggi terjadi pada **{musim_tertinggi['season']}** "
+             f"dengan rata-rata **{musim_tertinggi['cnt']:.2f} penyewaan**.")
+    st.write(f"- Penyewaan terendah terjadi pada **{musim_terendah['season']}** "
+             f"dengan rata-rata **{musim_terendah['cnt']:.2f} penyewaan**.")
