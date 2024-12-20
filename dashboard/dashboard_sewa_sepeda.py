@@ -92,8 +92,17 @@ elif page == "Analisis Hari Kerja":
 elif page == "Analisis Musim":
     st.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 
+    # Fitur Interaktif: Pilih Musim
+    st.subheader("Pilih Musim untuk Visualisasi")
+    selected_season_filter = st.multiselect(
+        "Pilih Musim untuk Analisis",
+        options=filtered_data['season'].unique(),
+        default=filtered_data['season'].unique()
+    )
+    season_filtered_data = filtered_data[filtered_data['season'].isin(selected_season_filter)]
+
     # Menghitung rata-rata penyewaan berdasarkan musim
-    avg_season = filtered_data.groupby('season')['cnt'].mean().reset_index()
+    avg_season = season_filtered_data.groupby('season')['cnt'].mean().reset_index()
     avg_season.columns = ['Musim', 'Rata-rata Penyewaan']
 
     st.subheader("Rata-rata Penyewaan Berdasarkan Musim")
