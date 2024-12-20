@@ -124,32 +124,31 @@ if not data.empty:
         ax.set_ylabel("Rata-rata Penyewaan Sepeda")
         st.pyplot(fig)
 
-  # Halaman Kesimpulan
-elif page == "Kesimpulan":
-    st.title("Kesimpulan Analisis Penyewaan Sepeda")
+    # Halaman Kesimpulan
+    elif page == "Kesimpulan":
+        st.title("Kesimpulan Analisis Penyewaan Sepeda")
 
-    if not filtered_data.empty:
-        # Menghitung kesimpulan berdasarkan data
-        cuaca_tertinggi = filtered_data.groupby('weathersit')['cnt'].mean().idxmax()
-        penyewaan_tertinggi_cuaca = filtered_data.groupby('weathersit')['cnt'].mean().max()
-        cuaca_terendah = filtered_data.groupby('weathersit')['cnt'].mean().idxmin()
-        penyewaan_terendah_cuaca = filtered_data.groupby('weathersit')['cnt'].mean().min()
+        if not filtered_data.empty:
+            cuaca_tertinggi = filtered_data.groupby('weathersit')['cnt'].mean().idxmax()
+            penyewaan_tertinggi_cuaca = filtered_data.groupby('weathersit')['cnt'].mean().max()
+            cuaca_terendah = filtered_data.groupby('weathersit')['cnt'].mean().idxmin()
+            penyewaan_terendah_cuaca = filtered_data.groupby('weathersit')['cnt'].mean().min()
 
-        hari_kerja_rata = filtered_data[filtered_data['day_type'] == 'Hari Kerja']['cnt'].mean()
-        akhir_pekan_rata = filtered_data[filtered_data['day_type'] == 'Akhir Pekan']['cnt'].mean()
+            hari_kerja_rata = filtered_data[filtered_data['day_type'] == 'Hari Kerja']['cnt'].mean()
+            akhir_pekan_rata = filtered_data[filtered_data['day_type'] == 'Akhir Pekan']['cnt'].mean()
 
-        musim_tertinggi = filtered_data.groupby('season')['cnt'].mean().idxmax()
-        penyewaan_tertinggi_musim = filtered_data.groupby('season')['cnt'].mean().max()
+            musim_tertinggi = filtered_data.groupby('season')['cnt'].mean().idxmax()
+            penyewaan_tertinggi_musim = filtered_data.groupby('season')['cnt'].mean().max()
 
-        st.subheader("Kesimpulan Analisis Cuaca:")
-        st.write(f"- Penyewaan sepeda tertinggi terjadi pada **{cuaca_tertinggi}** dengan rata-rata **{penyewaan_tertinggi_cuaca:.2f} penyewaan**.")
-        st.write(f"- Penyewaan sepeda terendah terjadi pada **{cuaca_terendah}** dengan rata-rata **{penyewaan_terendah_cuaca:.2f} penyewaan**.")
+            st.subheader("Kesimpulan Analisis Cuaca:")
+            st.write(f"- Penyewaan sepeda tertinggi terjadi pada **{cuaca_tertinggi}** dengan rata-rata **{penyewaan_tertinggi_cuaca:.2f} penyewaan**.")
+            st.write(f"- Penyewaan sepeda terendah terjadi pada **{cuaca_terendah}** dengan rata-rata **{penyewaan_terendah_cuaca:.2f} penyewaan**.")
 
-        st.subheader("Kesimpulan Analisis Hari Kerja:")
-        st.write(f"- Penyewaan rata-rata pada **hari kerja** adalah **{hari_kerja_rata:.2f} penyewaan**.")
-        st.write(f"- Penyewaan rata-rata pada **akhir pekan** adalah **{akhir_pekan_rata:.2f} penyewaan**.")
+            st.subheader("Kesimpulan Analisis Hari Kerja:")
+            st.write(f"- Penyewaan rata-rata pada **hari kerja** adalah **{hari_kerja_rata:.2f} penyewaan**.")
+            st.write(f"- Penyewaan rata-rata pada **akhir pekan** adalah **{akhir_pekan_rata:.2f} penyewaan**.")
 
-        st.subheader("Kesimpulan Analisis Musim:")
-        st.write(f"- Penyewaan tertinggi terjadi pada **{musim_tertinggi}** dengan rata-rata **{penyewaan_tertinggi_musim:.2f} penyewaan**.")
-    else:
-        st.write("Tidak ada data yang tersedia untuk kesimpulan.")
+            st.subheader("Kesimpulan Analisis Musim:")
+            st.write(f"- Penyewaan tertinggi terjadi pada **{musim_tertinggi}** dengan rata-rata **{penyewaan_tertinggi_musim:.2f} penyewaan**.")
+        else:
+            st.write("Tidak ada data yang tersedia untuk kesimpulan.")
