@@ -8,12 +8,20 @@ import gzip
 @st.cache_data
 def load_data():
     # Path absolut dinamis untuk file terkompresi
-    hour_file_path = '/mount/src/dashboard-sewa-sepeda/dashboard/cleaned_hour.csv.gz'
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
 
-    if not os.path.exists(hour_file_path):
+    # Debugging Path
+    st.write(f"Path saat ini: {current_dir}")
+    st.write(f"Path file yang dicari: {hour_file_path}")
+
+    # Cek apakah file ada
+    if not os.path.isfile(hour_file_path):
         st.error(f"File tidak ditemukan: {hour_file_path}")
-        return pd.DataFrame()
+        st.write("Isi folder root:", os.listdir(current_dir))
+        raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
 
+    # Membaca data CSV terkompresi
     try:
         with gzip.open(hour_file_path, mode='rt') as f:
             hour_df = pd.read_csv(f)
@@ -25,13 +33,18 @@ def load_data():
             hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
             season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
             hour_df['season'] = hour_df['season'].map(season_labels)
+            
             return hour_df
+
     except Exception as e:
         st.error(f"Gagal memuat file: {e}")
         return pd.DataFrame()
 
 # Load data
-data = load_data()
+try:
+    data = load_data()
+except FileNotFoundError:
+    st.stop()
 
 # Sidebar untuk Navigasi dan Filter
 st.sidebar.title("Navigasi Dashboard")
@@ -101,7 +114,6 @@ if not data.empty:
     # Halaman Analisis Musim
     elif page == "Analisis Musim":
         st.title("Pengaruh Musim terhadap Penyewaan Sepeda")
-
         selected_season_filter = st.multiselect(
             "Pilih Musim untuk Analisis",
             options=filtered_data['season'].unique(),
