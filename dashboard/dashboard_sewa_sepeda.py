@@ -7,45 +7,37 @@ import gzip
 
 @st.cache_data
 def load_data():
-    # Path absolut untuk file CSV terkompresi
-    current_dir = os.path.abspath(os.path.dirname(__file__))
-    hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
+    # Path absolut dinamis untuk file terkompresi
+    hour_file_path = '/mount/src/dashboard-sewa-sepeda/dashboard/cleaned_hour.csv.gz'
 
-    # Debugging path
-    st.write(f"Path saat ini: {current_dir}")
-    st.write(f"Path file yang dicari: {hour_file_path}")
-
-    # Cek apakah file ada
-    if not os.path.isfile(hour_file_path):
+    if not os.path.exists(hour_file_path):
         st.error(f"File tidak ditemukan: {hour_file_path}")
-        st.write("Isi folder root:", os.listdir(current_dir))
-        raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
+        return pd.DataFrame()
 
-    # Membaca data
-    with gzip.open(hour_file_path, mode='rt') as f:
-        hour_df = pd.read_csv(f)
-        hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
-        hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
+    try:
+        with gzip.open(hour_file_path, mode='rt') as f:
+            hour_df = pd.read_csv(f)
+            hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
+            hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
 
-        # Menambahkan label cuaca dan musim
-        weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
-        hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
-        season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
-        hour_df['season'] = hour_df['season'].map(season_labels)
-
-    return hour_df
+            # Menambahkan label cuaca dan musim
+            weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
+            hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
+            season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
+            hour_df['season'] = hour_df['season'].map(season_labels)
+            return hour_df
+    except Exception as e:
+        st.error(f"Gagal memuat file: {e}")
+        return pd.DataFrame()
 
 # Load data
-try:
-    data = load_data()
-except FileNotFoundError:
-    st.stop()
+data = load_data()
 
 # Sidebar untuk Navigasi dan Filter
 st.sidebar.title("Navigasi Dashboard")
 
-# Filter Berdasarkan Tanggal
 if not data.empty:
+    # Filter Berdasarkan Tanggal
     min_date = data['dteday'].min().date()
     max_date = data['dteday'].max().date()
     start_date, end_date = st.sidebar.date_input(
@@ -81,7 +73,6 @@ if not data.empty:
     # Halaman Analisis Cuaca
     elif page == "Analisis Cuaca":
         st.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
-
         avg_weather = filtered_data.groupby('weathersit')['cnt'].mean().reset_index()
         avg_weather.columns = ['Kondisi Cuaca', 'Rata-rata Penyewaan']
 
@@ -96,7 +87,6 @@ if not data.empty:
     # Halaman Analisis Hari Kerja
     elif page == "Analisis Hari Kerja":
         st.title("Perbandingan Penyewaan pada Hari Kerja dan Akhir Pekan")
-
         avg_day_type = filtered_data.groupby('day_type')['cnt'].mean().reset_index()
         avg_day_type.columns = ['Tipe Hari', 'Rata-rata Penyewaan']
 
