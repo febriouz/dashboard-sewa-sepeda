@@ -11,11 +11,7 @@ def load_data():
     current_dir = os.path.abspath(os.path.dirname(__file__))
     hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
 
-    # Debugging path
-    st.write(f"Path saat ini: {current_dir}")
-    st.write(f"Path file yang dicari: {hour_file_path}")
-
-    # Cek apakah file ada
+    # Debugging path hanya saat file tidak ditemukan
     if not os.path.isfile(hour_file_path):
         st.error(f"File tidak ditemukan: {hour_file_path}")
         st.write("Isi folder root:", os.listdir(current_dir))
