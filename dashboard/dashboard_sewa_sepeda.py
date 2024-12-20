@@ -6,7 +6,7 @@ import seaborn as sns
 # Load Data
 @st.cache_data
 def load_data():
-    hour_df = pd.read_csv('cleaned_hour.csv')
+    hour_df = pd.read_csv('dashboard/cleaned_hour.csv')  # Menyesuaikan path ke folder dashboard
     hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
     hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
     weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
