@@ -5,8 +5,6 @@ import seaborn as sns
 import os
 import gzip
 
-import os
-
 @st.cache_data
 def load_data():
     # Path absolut untuk file CSV terkompresi
@@ -19,9 +17,9 @@ def load_data():
 
     # Cek apakah file ada
     if not os.path.isfile(hour_file_path):
-    st.error(f"File tidak ditemukan: {hour_file_path}")
-    st.write("Isi folder root:", os.listdir(current_dir))
-    raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
+        st.error(f"File tidak ditemukan: {hour_file_path}")
+        st.write("Isi folder root:", os.listdir(current_dir))
+        raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
 
     # Membaca data
     with gzip.open(hour_file_path, mode='rt') as f:
