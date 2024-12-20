@@ -10,15 +10,15 @@ import os
 @st.cache_data
 def load_data():
     # Path absolut untuk file CSV terkompresi
-current_dir = os.path.abspath(os.path.dirname(__file__))
-hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    hour_file_path = os.path.join(current_dir, 'cleaned_hour.csv.gz')
 
-# Debugging path
-st.write(f"Path saat ini: {current_dir}")
-st.write(f"Path file yang dicari: {hour_file_path}")
+    # Debugging path
+    st.write(f"Path saat ini: {current_dir}")
+    st.write(f"Path file yang dicari: {hour_file_path}")
 
-# Cek apakah file ada
-if not os.path.isfile(hour_file_path):
+    # Cek apakah file ada
+    if not os.path.isfile(hour_file_path):
     st.error(f"File tidak ditemukan: {hour_file_path}")
     st.write("Isi folder root:", os.listdir(current_dir))
     raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
