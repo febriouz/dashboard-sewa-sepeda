@@ -14,9 +14,10 @@ def load_data():
     # Debugging Path
     st.write(f"Path file yang dicari: {hour_file_path}")
 
-    # Cek apakah file ada
+    # Cek apakah direktori dan file ada
     if not os.path.exists(hour_file_path):
         st.error(f"File tidak ditemukan: {hour_file_path}")
+        st.write(f"Isi folder 'dashboard': {os.listdir(os.path.join(current_dir, 'dashboard'))}")
         raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
 
     # Membaca data
@@ -32,6 +33,7 @@ def load_data():
         hour_df['season'] = hour_df['season'].map(season_labels)
 
     return hour_df
+
 
 # Load data
 try:
