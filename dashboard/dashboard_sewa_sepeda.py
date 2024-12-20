@@ -7,29 +7,37 @@ import gzip
 
 @st.cache_data
 def load_data():
-    # Gunakan path absolut untuk memastikan lokasi file CSV terkompresi
+    # Path absolut untuk file CSV terkompresi
     current_dir = os.path.abspath(os.path.dirname(__file__))
     hour_file_path = os.path.join(current_dir, 'dashboard', 'cleaned_hour.csv.gz')
 
-    try:
-        with gzip.open(hour_file_path, mode='rt') as f:
-            hour_df = pd.read_csv(f)
-            hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
-            hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
+    # Debugging Path
+    st.write(f"Path file yang dicari: {hour_file_path}")
 
-            # Tambahkan label cuaca dan musim
-            weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
-            hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
-            season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
-            hour_df['season'] = hour_df['season'].map(season_labels)
-
-            return hour_df
-    except FileNotFoundError as e:
+    # Cek apakah file ada
+    if not os.path.exists(hour_file_path):
         st.error(f"File tidak ditemukan: {hour_file_path}")
-        raise e
+        raise FileNotFoundError(f"File tidak ditemukan: {hour_file_path}")
+
+    # Membaca data
+    with gzip.open(hour_file_path, mode='rt') as f:
+        hour_df = pd.read_csv(f)
+        hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
+        hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
+
+        # Menambahkan label cuaca dan musim
+        weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
+        hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
+        season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
+        hour_df['season'] = hour_df['season'].map(season_labels)
+
+    return hour_df
 
 # Load data
-data = load_data()
+try:
+    data = load_data()
+except FileNotFoundError:
+    st.stop()
 
 # Sidebar untuk Navigasi dan Filter
 st.sidebar.title("Navigasi Dashboard")
