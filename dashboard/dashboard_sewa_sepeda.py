@@ -7,26 +7,26 @@ import gzip
 
 @st.cache_data
 def load_data():
-    # Path absolut untuk file CSV terkompresi
-    hour_file_path = os.path.join(os.path.dirname(__file__), 'dashboard', 'cleaned_hour.csv.gz')
+    # Gunakan path absolut untuk memastikan lokasi file CSV terkompresi
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    hour_file_path = os.path.join(current_dir, 'dashboard', 'cleaned_hour.csv.gz')
 
     try:
-        # Buka file terkompresi
         with gzip.open(hour_file_path, mode='rt') as f:
             hour_df = pd.read_csv(f)
             hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
             hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
 
-            # Tambahkan label untuk cuaca dan musim
+            # Tambahkan label cuaca dan musim
             weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
             hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
             season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
             hour_df['season'] = hour_df['season'].map(season_labels)
 
             return hour_df
-    except FileNotFoundError:
-        st.error("File cleaned_hour.csv.gz tidak ditemukan! Pastikan file berada di direktori yang benar.")
-        return pd.DataFrame()
+    except FileNotFoundError as e:
+        st.error(f"File tidak ditemukan: {hour_file_path}")
+        raise e
 
 # Load data
 data = load_data()
