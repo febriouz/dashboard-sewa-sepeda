@@ -3,17 +3,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load Data
 @st.cache_data
 def load_data():
-    # Pastikan dataset berada di folder yang sama dengan file Python ini
-    hour_df = pd.read_csv('dashboard/cleaned_hour.csv')
+    # Path absolut dinamis
+    hour_file_path = os.path.join(os.path.dirname(__file__), 'dashboard', 'cleaned_hour.csv')
+
+    hour_df = pd.read_csv(hour_file_path)
     hour_df['dteday'] = pd.to_datetime(hour_df['dteday'])
     hour_df['day_type'] = hour_df['workingday'].apply(lambda x: 'Hari Kerja' if x == 1 else 'Akhir Pekan')
+
+    # Menambahkan label cuaca dan musim
     weather_labels = {1: 'Cerah', 2: 'Mendung/Hujan Ringan', 3: 'Hujan Lebat', 4: 'Ekstrem'}
     hour_df['weathersit'] = hour_df['weathersit'].map(weather_labels)
     season_labels = {1: 'Musim Semi', 2: 'Musim Panas', 3: 'Musim Gugur', 4: 'Musim Dingin'}
     hour_df['season'] = hour_df['season'].map(season_labels)
+
     return hour_df
 
 # Load data
