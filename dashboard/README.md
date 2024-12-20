@@ -1,7 +1,3 @@
-Berikut adalah file `README.md` yang dimodifikasi dengan tambahan instruksi untuk menginstal dependencies secara manual jika file `requirements.txt` tidak dapat digunakan:
-
----
-
 # **Dashboard Penyewaan Sepeda 🚲**
 
 Dashboard ini adalah aplikasi interaktif berbasis **Streamlit** yang digunakan untuk menganalisis data penyewaan sepeda. Dashboard ini menampilkan berbagai visualisasi yang berguna untuk memahami tren penyewaan sepeda berdasarkan cuaca, musim, hari kerja, dan faktor lingkungan lainnya.
